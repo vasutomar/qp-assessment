@@ -3,7 +3,7 @@ import { User } from "../models/User";
 import {
     checkHealth,
     createUser,
-    findUser,
+    loginUser,
     verifySession
 } from "../services/authentication-service";
 import { handleServerError, prepareServerResponse } from "../utils/common-utils";
@@ -28,7 +28,7 @@ export async function signup(req: any, res: any) {
 export async function signin(req: any, res: any) {
     try {
         const body = req.body;
-        const token: string = await findUser(body);
+        const token: string = await loginUser(body);
         if (token) {
             res.send(prepareServerResponse(200, "User logged in!", token));
         } else {
