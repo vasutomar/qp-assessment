@@ -1,6 +1,7 @@
 import {
     checkHealth,
-    add
+    add,
+    getAll
 } from "../services/inventory-service";
 import { getRole } from "../utils/authentication-utils";
 import { handleServerError, prepareServerResponse } from "../utils/common-utils";
@@ -17,7 +18,6 @@ export async function addItem(req: any, res: any) {
         const body = req.body;
         const token = req.header('Authorization');
         const role = await getRole(token);
-        console.log('role', role);
         if (role !== 'admin') {
             res.send(prepareServerResponse(401, "User not authorized", null));
         } else {
@@ -31,7 +31,8 @@ export async function addItem(req: any, res: any) {
 
 export async function viewInventory(req: any, res: any) {
     try {
-
+        const allItems = await getAll();
+        res.send(prepareServerResponse(200, "Items fetched", allItems));
     } catch (err) {
         handleServerError(err, res);
     }
