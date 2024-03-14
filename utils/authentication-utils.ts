@@ -8,13 +8,16 @@ export function getJWTToken(data: any) {
 }
 
 export async function verifyToken(token: string): Promise<boolean> {
-    const salt = getVariable("SALT");
-    await jwt.verify(token, salt, function(err: any, decoded: any) {
-        if (err) {
-            return false;
-        } else {
-            return true;
-        }
-    });
-    return false;
+    try {
+        const salt = getVariable("SALT");
+        let isValid = true;
+        await jwt.verify(token, salt, function(err: any, decoded: any) {
+            if (err) {
+                isValid = false;
+            }
+        });
+        return isValid;
+    } catch(err) {
+        throw err;
+    }
 }

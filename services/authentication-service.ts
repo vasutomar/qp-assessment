@@ -1,7 +1,7 @@
 import { dbConfig } from "../config/mysql-config";
 import { User } from "../models/User";
 import { v4 as uuidv4 } from "uuid";
-import { getJWTToken } from "../utils/authentication-utils";
+import { getJWTToken, verifyToken } from "../utils/authentication-utils";
 var mysql = require('mysql2');
 
 export function checkHealth() {
@@ -37,18 +37,27 @@ export function createUser(userData: User): User {
   return userData;
 }
 
-export async function findUser(user: User): Promise<any> {
-  const email = user.email;
-  const password = user.password;
-  let token = null;
-  var connection = mysql.createConnection(dbConfig);
-  connection.connect();
-  const [rows, fields] = await connection.promise().query(`SELECT * FROM User WHERE email="${email}"`);
-  const fetchedUser = rows.length ? rows[0] : {};
-  if (fetchedUser.password === password) {
-    token = getJWTToken({ user, password });
-    console.log('token', token); 
+export async function findUser(user: User): Promise<string> {
+  try {
+    let token = '';
+    const email = user.email;
+    const password = user.password;
+    var connection = mysql.createConnection(dbConfig);
+    connection.connect();
+    const [rows, fields] = await connection.promise().query(`SELECT * FROM User WHERE email="${email}"`);
+    const fetchedUser = rows.length ? rows[0] : {};
+    if (fetchedUser.password === password) {
+      token = getJWTToken({ user, password });
+    }
+    connection.end();
     return token;
+  } catch(err) {
+    throw Error('Error');
   }
-  connection.end();
+}
+
+export async function verifySession(data: any): Promise<boolean> {
+  const token = data.token;
+  const verdict = await verifyToken(token);
+  return verdict;
 }
