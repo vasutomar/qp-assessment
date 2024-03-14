@@ -37,3 +37,25 @@ export async function getAll(): Promise<[Item]> {
   connection.end();
   return results;
 }
+
+export async function remove(itemId: string): Promise<boolean> {
+  var connection = mysql.createConnection(dbConfig);
+  connection.connect();
+  const [results, fields] = await connection.promise().query(`DELETE from Item where itemId='${itemId}'`);
+  connection.end();
+  if (!results.affectedRows) return false;
+  return true;
+}
+
+export async function updateCount(itemId: string, count: number): Promise<boolean> {
+  var connection = mysql.createConnection(dbConfig);
+  connection.connect();
+  const [results, fields] = await connection.promise().query(`
+    UPDATE Item 
+    SET count=${count}
+    WHERE itemId='${itemId}'`
+  );
+  connection.end();
+  if (!results.affectedRows) return false;
+  return true;
+}

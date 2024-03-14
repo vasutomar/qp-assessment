@@ -1,7 +1,9 @@
 import {
     checkHealth,
     add,
-    getAll
+    getAll,
+    remove,
+    updateCount
 } from "../services/inventory-service";
 import { getRole } from "../utils/authentication-utils";
 import { handleServerError, prepareServerResponse } from "../utils/common-utils";
@@ -40,7 +42,39 @@ export async function viewInventory(req: any, res: any) {
 
 export async function removeItem(req: any, res: any) {
     try {
+        const body = req.body;
+        const token = req.header('Authorization');
+        const role = await getRole(token);
+        if (role !== 'admin') {
+            res.send(prepareServerResponse(401, "User not authorized", null));
+        } else {
+            const removedVerdict = await remove(body.itemId);
+            if (removedVerdict) {
+                res.send(prepareServerResponse(201, "Item deleted", null));
+            } else {
+                res.send(prepareServerResponse(404, "Item not found", null));
+            }
+        }
+    } catch (err) {
+        handleServerError(err, res);
+    }
+}
 
+export async function manageCount(req: any, res: any) {
+    try {
+        const body = req.body;
+        const token = req.header('Authorization');
+        const role = await getRole(token);
+        if (role !== 'admin') {
+            res.send(prepareServerResponse(401, "User not authorized", null));
+        } else {
+            const updateVerdict = await updateCount(body.itemId, body.count);
+            if (updateVerdict) {
+                res.send(prepareServerResponse(201, "Count updated", null));
+            } else {
+                res.send(prepareServerResponse(404, "Item not found", null));
+            }
+        }
     } catch (err) {
         handleServerError(err, res);
     }
