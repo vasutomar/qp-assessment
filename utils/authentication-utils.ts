@@ -31,13 +31,27 @@ export async function getRole(token: string): Promise<string> {
             if (!err) {
                 const userId = decoded.userId;
                 const fetchedUser = await getUser(userId);
-                console.log()
                 if (fetchedUser) {
                     role = fetchedUser.role;
                 }
             }
         });
         return role;
+    } catch(err) {
+        throw err;
+    }
+}
+
+export async function getUserId(token: string): Promise<string> {
+    try {
+        const salt = getVariable("SALT");
+        let userId = '';
+        await jwt.verify(token, salt, async function(err: any, decoded: any) {
+            if (!err) {
+                userId = decoded.userId;
+            }
+        });
+        return userId;
     } catch(err) {
         throw err;
     }

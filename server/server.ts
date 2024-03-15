@@ -3,6 +3,7 @@ import { authenticationRouter } from '../router/autentication-router';
 import { getVariable } from '../config/getVariables';
 import bodyParser from 'body-parser';
 import { inventoryRouter } from '../router/inventory-router';
+import { cartRouter } from '../router/cart-router';
 
 const port = getVariable('PORT');
 const host = getVariable('HOSTNAME');
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 
 app.use(authenticationRouter);
 app.use(inventoryRouter);
+app.use(cartRouter);
 app.listen(parseInt(port, 10), host, () => {
     console.log(`Server started at http://localhost:${port}`);
 });
