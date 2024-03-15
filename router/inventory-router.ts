@@ -6,6 +6,7 @@ import {
     removeItem,
     updateItem,
     manageCount,
+    getItemList
 } from "../controllers/inventory-controller";
 
 export const inventoryRouter = express.Router();
@@ -15,4 +16,4 @@ inventoryRouter.get("/inventory/view", viewInventory);
 inventoryRouter.delete("/inventory/remove", removeItem);
 inventoryRouter.post("/inventory/update", updateItem);
 inventoryRouter.post("/inventory/manageCount", manageCount);
-
+inventoryRouter.get("/inventory/viewList", getItemList);

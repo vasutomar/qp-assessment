@@ -3,7 +3,8 @@ import {
     add,
     getAll,
     remove,
-    updateCount
+    updateCount,
+    update
 } from "../services/inventory-service";
 import { getRole } from "../utils/authentication-utils";
 import { handleServerError, prepareServerResponse } from "../utils/common-utils";
@@ -82,10 +83,39 @@ export async function manageCount(req: any, res: any) {
 
 export async function updateItem(req: any, res: any) {
     try {
-
+        const body = req.body;
+        const token = req.header('Authorization');
+        const role = await getRole(token);
+        if (role !== 'admin') {
+            res.send(prepareServerResponse(401, "User not authorized", null));
+        } else {
+            const updateVerdict = await update(body);
+            if (updateVerdict) {
+                res.send(prepareServerResponse(201, "Item updated", null));
+            } else {
+                res.send(prepareServerResponse(404, "Item not found or cannot update", null));
+            }
+        }
     } catch (err) {
         handleServerError(err, res);
     }
+}
+
+export async function getItemList(req: any, res: any) {
+  try {
+    const allItems = await getAll();
+    res.send(
+      prepareServerResponse(
+        200,
+        "Items fetched",
+        allItems.map((item) => {
+          return item.name;
+        })
+      )
+    );
+  } catch (err) {
+    handleServerError(err, res);
+  }
 }
 
 

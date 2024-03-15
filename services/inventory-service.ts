@@ -59,3 +59,30 @@ export async function updateCount(itemId: string, count: number): Promise<boolea
   if (!results.affectedRows) return false;
   return true;
 }
+
+export async function update(item: Item): Promise<boolean> {
+  var connection = mysql.createConnection(dbConfig);
+  connection.connect();
+  const [fetchResults] = await connection.promise().query(`
+    SELECT * from Item 
+    WHERE itemId='${item.itemId}'`
+  );
+  if (!fetchResults.length) {
+    return false;
+  }
+  let fetchedItem = fetchResults[0];
+  Object.keys(item).forEach((key) => {
+    fetchedItem[key as keyof Item] = item[key as keyof Item];
+  });
+  const [updateResults] = await connection.promise().query(`
+    UPDATE Item
+    SET itemId='${fetchedItem.itemId}',
+    name='${fetchedItem.name}',
+    type='${fetchedItem.type}',
+    price=${fetchedItem.price},
+    count=${fetchedItem.count}
+  `);
+  connection.end();
+  if (!updateResults.affectedRows) return false;
+  return true;
+}

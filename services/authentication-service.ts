@@ -58,6 +58,7 @@ export async function getUser(userId: string | null): Promise<User> {
     var connection = mysql.createConnection(dbConfig);
     connection.connect();
     const [rows, fields] = await connection.promise().query(`SELECT * FROM User WHERE userId="${userId}"`);
+    console.log('rows',rows);
     fetchedUser = rows.length ? rows[0] : {};
     connection.end();
     return fetchedUser;
