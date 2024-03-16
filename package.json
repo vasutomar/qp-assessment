@@ -21,6 +21,7 @@
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.9.2",
+    "pino": "^8.19.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

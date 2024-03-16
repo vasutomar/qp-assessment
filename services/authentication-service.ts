@@ -2,13 +2,18 @@ import { dbConfig } from "../config/mysql-config";
 import { User } from "../models/User";
 import { v4 as uuidv4 } from "uuid";
 import { getJWTToken, verifyToken } from "../utils/authentication-utils";
+import { createLogger } from "../utils/logger.utils";
 var mysql = require('mysql2');
 
+const logger = createLogger();
+
 export function checkHealth() {
+  logger.info('Authhentication Service health: :Live');
   return "Live";
 }
 
 export function createUser(userData: User): User {
+  logger.info('createUser service : Start');
   const userId = uuidv4();
   userData.userId = userId;
   var connection = mysql.createConnection(dbConfig);
@@ -33,6 +38,7 @@ export function createUser(userData: User): User {
             throw Error(error); 
         }
     });
+  logger.info('createUser service : Database insertion complete');
   connection.end();
   return userData;
 }
