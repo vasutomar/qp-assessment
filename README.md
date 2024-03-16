@@ -79,3 +79,6 @@ docker run -d -p 3001:3001 qp-assessment
 ├── package.json        # npm package file
 └── README.md           # Project README file
 ```
+
+## mySQL Screenshot
+![SQL entry image](sql.png)
