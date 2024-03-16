@@ -60,6 +60,7 @@ npm run start
 docker build -t qp-assessment .
 docker run -d -p 3001:3001 qp-assessment
 ```
+![Docker image](docker.png)
 
 ### Project structure
 ```
