@@ -1,4 +1,4 @@
-# qp-assessment
+# Node.js POC
 
 This **Node.js** project, written in **TypeScript**, employs **Express.js** for server-side operations and **Pino logger** for logging. 
 The application is containerized using **Docker**, and it utilizes a **MySQL database** for data storage. 
